@@ -1,0 +1,10 @@
+{
+  "compras": [
+    {
+      "cantidadItems": 1,
+      "firstName": "Juan",
+      "lastName": "Perez",
+      "postalCode": "12345"
+    }
+  ]
+}
