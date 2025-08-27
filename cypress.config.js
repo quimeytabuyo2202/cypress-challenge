@@ -32,7 +32,6 @@ module.exports = defineConfig({
     },
     e2e: {
         setupNodeEvents(on, config) {
-            // Limpiar reports JSON previos
             on('before:run', async () => {
                 if (fs.existsSync(reportsDir)) {
                     for (const file of await fsp.readdir(reportsDir)) {
@@ -44,7 +43,6 @@ module.exports = defineConfig({
                 }
             });
 
-            // Normalizar screenshots
             on('after:screenshot', (details) => {
                 const screenshotPath = details.path;
                 const screenshotDir = path.dirname(screenshotPath);
@@ -58,18 +56,18 @@ module.exports = defineConfig({
                     const newPath = path.join(screenshotsDir, newFileName);
 
                     fs.renameSync(screenshotPath, newPath);
-                    console.log(`📸 [SCREENSHOT] Movida: ${newFileName}`);
+                    console.log(`Movida: ${newFileName}`);
 
                     try {
                         if (fs.existsSync(screenshotDir)) {
                             const files = fs.readdirSync(screenshotDir);
                             if (files.length === 0) {
                                 fs.rmdirSync(screenshotDir, { recursive: true });
-                                console.log(`🗑️ [SCREENSHOT CLEANUP] Carpeta eliminada: ${screenshotDir}`);
+                                console.log(`Carpeta eliminada: ${screenshotDir}`);
                             }
                         }
                     } catch (error) {
-                        console.warn(`⚠️ [SCREENSHOT CLEANUP] No se pudo eliminar: ${screenshotDir}`, error);
+                        console.warn(`No se pudo eliminar: ${screenshotDir}`, error);
                     }
 
                     return { path: newPath };
@@ -77,7 +75,7 @@ module.exports = defineConfig({
                 return { path: screenshotPath };
             });
 
-            // Generar reporte final
+            // Reporte final
             on('after:run', async () => {
                 const { merge } = require('mochawesome-merge');
                 const { create } = require('mochawesome-report-generator');
@@ -94,23 +92,22 @@ module.exports = defineConfig({
                         reportDir: reportsDir,
                         reportFilename,
                         overwrite: false,
-                        saveJson: false, // 🔄 poner en true si querés un JSON único
+                        saveJson: false, 
                         charts: true,
                         embeddedScreenshots: true,
                         inlineAssets: true
                     });
 
-                    console.log(`✅ [REPORT] Generado: ${reportsDir}/${reportFilename}.html`);
+                    console.log(`Reporte Generado: ${reportsDir}/${reportFilename}.html`);
 
-                    // Eliminar JSON intermedios
                     for (const file of await fsp.readdir(reportsDir)) {
                         if (file.endsWith('.json') && file.startsWith('mochawesome_')) {
                             await fsp.unlink(path.join(reportsDir, file));
-                            console.log(`🗑️ [REPORT CLEANUP] Eliminado: ${file}`);
+                            console.log(`Reporte eliminado: ${file}`);
                         }
                     }
                 } catch (error) {
-                    console.error('❌ [REPORT ERROR] No se pudo generar reporte:', error);
+                    console.error('No se pudo generar reporte:', error);
                 }
             });
 
