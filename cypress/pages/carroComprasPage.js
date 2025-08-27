@@ -45,10 +45,6 @@ class CarroComprasPage {
         return this;
     }
 
-   /*  obtenerMensajeCompraRealizada() {
-        return this.elements.mensajeCompraRealizada().invoke('text');
-    } */
-
     verificarMensajeCompraExitoso() {
         this.elements.mensajeCompraRealizada()
             .should('contain', 'Your order has been dispatched');

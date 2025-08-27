@@ -6,7 +6,7 @@ class LoginPage {
     }
 
     visitSauceDemo(url) {
-        cy.visit(url); // ✅ Cypress directo
+        cy.visit(url);
         return this;
     }
 
